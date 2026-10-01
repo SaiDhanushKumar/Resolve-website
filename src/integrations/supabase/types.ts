@@ -14,16 +14,281 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assignments: {
+        Row: {
+          agent_id: string | null
+          assigned_by: string
+          complaint_id: string
+          created_at: string
+          department_id: string
+          id: string
+          note: string
+        }
+        Insert: {
+          agent_id?: string | null
+          assigned_by: string
+          complaint_id: string
+          created_at?: string
+          department_id: string
+          id?: string
+          note?: string
+        }
+        Update: {
+          agent_id?: string | null
+          assigned_by?: string
+          complaint_id?: string
+          created_at?: string
+          department_id?: string
+          id?: string
+          note?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignments_complaint_id_fkey"
+            columns: ["complaint_id"]
+            isOneToOne: false
+            referencedRelation: "complaints"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      complaint_events: {
+        Row: {
+          actor_id: string | null
+          complaint_id: string
+          created_at: string
+          event_type: string
+          id: string
+          message: string
+        }
+        Insert: {
+          actor_id?: string | null
+          complaint_id: string
+          created_at?: string
+          event_type: string
+          id?: string
+          message?: string
+        }
+        Update: {
+          actor_id?: string | null
+          complaint_id?: string
+          created_at?: string
+          event_type?: string
+          id?: string
+          message?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "complaint_events_complaint_id_fkey"
+            columns: ["complaint_id"]
+            isOneToOne: false
+            referencedRelation: "complaints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      complaints: {
+        Row: {
+          assigned_agent_id: string | null
+          category: string
+          created_at: string
+          customer_id: string
+          department_id: string | null
+          description: string
+          id: string
+          priority: Database["public"]["Enums"]["complaint_priority"]
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["complaint_status"]
+          subject: string
+          ticket_no: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_agent_id?: string | null
+          category?: string
+          created_at?: string
+          customer_id: string
+          department_id?: string | null
+          description: string
+          id?: string
+          priority?: Database["public"]["Enums"]["complaint_priority"]
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["complaint_status"]
+          subject: string
+          ticket_no?: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_agent_id?: string | null
+          category?: string
+          created_at?: string
+          customer_id?: string
+          department_id?: string | null
+          description?: string
+          id?: string
+          priority?: Database["public"]["Enums"]["complaint_priority"]
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["complaint_status"]
+          subject?: string
+          ticket_no?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "complaints_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      departments: {
+        Row: {
+          code: string
+          created_at: string
+          description: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string
+          complaint_id: string | null
+          created_at: string
+          email_status: string
+          id: string
+          read: boolean
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          complaint_id?: string | null
+          created_at?: string
+          email_status?: string
+          id?: string
+          read?: boolean
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          complaint_id?: string | null
+          created_at?: string
+          email_status?: string
+          id?: string
+          read?: boolean
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_complaint_id_fkey"
+            columns: ["complaint_id"]
+            isOneToOne: false
+            referencedRelation: "complaints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          department_id: string | null
+          email: string
+          full_name: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          department_id?: string | null
+          email?: string
+          full_name?: string
+          id: string
+        }
+        Update: {
+          created_at?: string
+          department_id?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "agent" | "customer"
+      complaint_priority: "low" | "medium" | "high" | "critical"
+      complaint_status:
+        | "open"
+        | "assigned"
+        | "in_progress"
+        | "resolved"
+        | "closed"
+        | "reopened"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +415,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "agent", "customer"],
+      complaint_priority: ["low", "medium", "high", "critical"],
+      complaint_status: [
+        "open",
+        "assigned",
+        "in_progress",
+        "resolved",
+        "closed",
+        "reopened",
+      ],
+    },
   },
 } as const
