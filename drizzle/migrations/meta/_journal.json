@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790834762135,
+      "tag": "0000_service_desk_core",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790834809781,
+      "tag": "0001_role_management",
+      "breakpoints": true
+    }
+  ]
+}
